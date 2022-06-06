@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Web;
+using System.Runtime.Caching;
 using System.Web.Mvc;
-using Vidly.Models;
+using System.Windows.Forms;
+using Vidly.Models.IdentityModels;
 using Vidly.ViewModels;
 
-namespace Vidly.Controllers
+namespace Vidly.Models
 {
     public class CustomersController : Controller
     {
@@ -95,18 +95,34 @@ namespace Vidly.Controllers
             return RedirectToAction("Index", "Customers");
         }
 
-
-
         // GET: Customers
         public ViewResult Index()
         {
+            // SECTION 9: PERFORMANCE OPTIMIZATION - 105. DATA CACHE
+            // use this if you do performance optimization before and find that it can be useful
+            if (MemoryCache.Default["Genres"]==null)
+            {
+                MemoryCache.Default["Genres"] = _context.Genres.ToList();
+            }
+
+            var genres = MemoryCache.Default["Genres"] as IEnumerable<Genre>;
+
+
+
             return View();
 
-            // WE ARE USING API TO GET CUSTOMER LIST. NO NEED HERE
+            // NOW WE ARE USING /api/GetCustomers. NO NEED HERE
             //var customers = _context.Customers.Include(c=>c.MembershipType).ToList();
 
             //return View(customers);
         }
+
+
+
+
+
+
+
 
 
 

@@ -11,6 +11,10 @@ namespace Vidly
     {
         public static void Register(HttpConfiguration config)
         {
+            // SAM - Adding this code to FilterConfig do not affect WEB API Authentications. So you have to put it here separately
+            config.Filters.Add(new AuthorizeAttribute());
+
+
             var settings = config.Formatters.JsonFormatter.SerializerSettings;
             settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             settings.Formatting = Formatting.Indented;
